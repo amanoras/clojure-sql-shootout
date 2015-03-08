@@ -1,4 +1,4 @@
-select * 
+select u.id as user_id, u.username, u.password, g.id, g.name 
 from shootout.users as u 
 join shootout.users_groups as ug 
   on u.id = ug.user_id 

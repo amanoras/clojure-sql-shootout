@@ -4,6 +4,7 @@
             [sqlingvo.util :refer :all]
             [sqlingvo.db :refer [defdb]]
             [clojure.java.jdbc :as jdbc]
+            [shootout.util :refer :all]
             [clojure.string :as str]))
 
 (defdb h2
@@ -14,11 +15,12 @@
   :quote #(str/upper-case (sql-quote-double-quote %)))
 
 (defn get-user-groups [username]
-  (jdbc/query db
-    (s/sql (s/select (h2) [*]
-             (s/from :shootout.users)
-             (s/join :shootout.users_groups 
-               '(s/on (= :shootout.users.id :shootout.users_groups.user_id)))
-             (s/join :shootout.groups
-               '(s/on (= :shootout.groups.id :shootout.users_groups.group_id)))
-             (s/where '(= :username username))))))
+  (create-user-map 
+    (jdbc/query db
+      (s/sql (s/select (h2) [*]
+               (s/from :shootout.users)
+               (s/join :shootout.users_groups 
+                 '(s/on (= :shootout.users.id :shootout.users_groups.user_id)))
+               (s/join :shootout.groups
+                 '(s/on (= :shootout.groups.id :shootout.users_groups.group_id)))
+               (s/where '(= :shootout.users.username username)))))))

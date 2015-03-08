@@ -21,5 +21,12 @@
                      :group_id
                      :user_id)})))) 
 
+(defn create-user-map [user] 
+  (hash-map :id (:id user)
+            :username (:username user)
+            :password (:password user)
+            :groups (map #(hash-map :id (:id %)
+                                     :name (:name %)) (:groups user))))
+
 (defn get-user-groups [id]
-  (agg/load er-conf db :shootout.users id))
+  (create-user-map (agg/load er-conf db :shootout.users id)))
